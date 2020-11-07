@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" media="all"/>
+    <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+</head>
+<style>
+    span{
+        font-weight: bold;
+        font-size: large;
+    }
+    .cont{
+        border:1px solid #ccc;
+        padding:14px;
+        border-radius:16px;
+        margin-top: 40px;
+        text-align: left;
+    }
+</style>
+<body style="margin: 0 auto;text-align: center">
+    <h1 th:text="${title}"></h1>
+    <hr>
+    <div shiro:hasPermission="user:svip">
+        <span>以下是SVIP用户观影目录:</span>
+        <br>
+        <p th:each="svipinfo:${session.svipinfos}">
+            <a th:href="'/svip/'+${svipinfo.getMid()}" th:text="${svipinfo.getName()}"></a>
+            <br>
+        </p>
+    </div>
+
+    <div shiro:hasAnyPermissions="user:vip,user:svip">
+        <span>以下是VIP用户观影目录:</span>
+        <br>
+        <p th:each="vipinfo:${session.vipinfos}">
+            <a th:href="'/vip/'+${vipinfo.getMid()}" th:text="${vipinfo.getName()}"></a>
+            <br>
+        </p>
+    </div>
+
+    <div shiro:hasAnyPermissions="user:vip,user:svip,user:comm">
+        <span>以下是登陆用户观影目录:</span>
+        <br>
+        <p th:each="userinfo:${session.userinfos}">
+            <a th:href="'/comm/'+${userinfo.getMid()}" th:text="${userinfo.getName()}"></a>
+            <br>
+        </p>
+    </div>
+
+    <div>
+        <span>以下是免费电影，需要更多功能请登录后操作</span>
+        <br>
+        <a th:href="@{/mf/1}">曹操</a>
+        <br>
+        <a th:href="@{/mf/2}">中国近代史</a>
+    </div>
+
+    <button type="submit" class="btn btn-success" id="sublogin">登陆</button>
+    <span shiro:hasAnyPermissions="user:vip,user:svip,user:comm">
+        <button type="submit" class="btn btn-danger" id="sublogout">登出</button>
+    </span>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <p class="cont">
+                本系统集合shiro，包含三种角色
+                <br>
+                分别为SVIP用户,VIP用户,普通用户[comm]
+                <br>
+                SVIP可浏览权限为[svip,vip,comm]
+                <br>
+                VIP 可浏览权限为[vip,comm]
+                <br>
+                comm可浏览权限为[comm]
+                <br>
+                登录过程中若账户不存在或密码错误
+                <br>
+                后端会通过Session传输对应警告信息到登陆页面展示
+                <br>
+                用户账号密码分别为：
+                <br>
+                SVIP: root root
+                <br>
+                VIP : vip  vip
+                <br>
+                comm: user user
+                <br>
+                数据接口为:
+                <br>
+                svip: /svip/{id}
+                <br>
+                vip: /vip/{id}
+                <br>
+                comm: /comm/{id}
+            </p>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    $("#sublogin").click(function () {
+        location.href = "/toLogin";
+    })
+    $("#sublogout").click(function () {
+        location.href = "/logout";
+    })
+</script>
+</html>

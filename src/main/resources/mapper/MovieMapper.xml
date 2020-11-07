@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mzx.shiromzx209.dao.MovieDao">
+
+    <select id="findAllByUidAndId" resultType="com.mzx.shiromzx209.entity.Movie">
+        SELECT name,url FROM user_movie WHERE uid = #{uid} and mid = #{mid}
+    </select>
+
+    <select id="findAllByName" resultType="com.mzx.shiromzx209.entity.Movie">
+        SELECT mid,name FROM user_movie INNER JOIN  user ON user.id = user_movie.uid WHERE user.username = #{username}
+    </select>
+
+</mapper>
